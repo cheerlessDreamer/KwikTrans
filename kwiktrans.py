@@ -9,7 +9,8 @@ from variables import availableLanguages
 
 translator = Translator()
 
-rumps.debug_mode(True)
+
+# rumps.debug_mode(True)
 
 
 # TODO: • Preferences panel to change default language configuration (could use PyQt5)
@@ -25,6 +26,7 @@ rumps.debug_mode(True)
 
 
 def getOnlineStatus():
+    """Return online status as a boolean"""
     try:
         socket.create_connection(("1.1.1.1", 53))
         return True
@@ -34,6 +36,7 @@ def getOnlineStatus():
 
 
 def getClipboard(source=None, destination=None):
+    """Get clipboard contents and check length"""
     original = pyperclip.paste()
     if not getOnlineStatus():
         rumps.alert(title="No Connection…", ok="Close",
@@ -62,6 +65,7 @@ def getClipboard(source=None, destination=None):
 
 
 class Kwiktrans(rumps.App):
+    """The Kwiktrans object is a rumps application that houses all of the language functions."""
 
     def __init__(self):
         super(Kwiktrans, self).__init__(name="TestName")
@@ -74,11 +78,13 @@ class Kwiktrans(rumps.App):
 
     @rumps.clicked("About KwikTrans")
     def aboutWindow(self, _):
+        """Show a simple 'about' window."""
         rumps.alert(title="KwikTrans", ok="Close",
                     message="© 2021 Danny Taylor\nVersion: 0.3.3\nContact: hello@dannytaylor.se")
 
     @rumps.clicked("Detect Language")
     def getLanguage(self, _):
+        """Displays the language of text on the clipboard."""
         if not getOnlineStatus():
             rumps.alert(title="No Connection…", ok="Close",
                         message="We are having trouble connecting to the internet. Please try again later.")
@@ -101,6 +107,7 @@ class Kwiktrans(rumps.App):
 
     @rumps.clicked("🇬🇧 → 🇸🇪")
     def englishToSwedish(self, _):
+        """Translates text on the clipboard from English into Swedish."""
         original = getClipboard(source="en", destination="sv")
         if not original:
             return
@@ -115,6 +122,7 @@ class Kwiktrans(rumps.App):
 
     @rumps.clicked("🇸🇪 → 🇬🇧")
     def swedishToEnglish(self, _):
+        """Translates text on the clipboard from Swedish into English."""
         original = getClipboard(source="sv", destination="en")
         if not original:
             return
@@ -132,6 +140,7 @@ class Kwiktrans(rumps.App):
 
     @rumps.clicked("Random")
     def toRandom(self, _):
+        """Starts a super fun quiz session and presents three possible language choices."""
         if not getOnlineStatus():
             rumps.alert(title="No Connection…", ok="Close",
                         message="We are having trouble connecting to the internet. Please try again later.")
