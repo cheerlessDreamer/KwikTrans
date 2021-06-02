@@ -13,8 +13,9 @@ As an interesting beginners test for myself, I also implemented a 'Random' funct
 ###### Current todos and problems include: 
 
 - [ ] Preferences panel to change default language configuration (could use PyQt5)
+- [ ] Add a timeout with failed connection (something around 5 seconds should suffice)
 - [ ] Before a GUI version is implemented, use a 'preferences.json' file to maintain preferences
-- [ ] Add keybindings
+- [ ] Add keybindings (i.e., `Cmd + Shift + E` for English or `Cmd + Shift + S` for Swedish, etc...)
 - [ ] Add a right-click service
 - [ ] Use full name of language ('Detect Language' and 'Random') instead of ISO code (maybe a flag emoji?)
 - [ ] Inform when 'Copy Text' was successful (either change icon to 'Copied!' or use a native notification)
