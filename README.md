@@ -1,8 +1,8 @@
 # KwikTrans
 
-###### Image coming soon!
-
 > A menubar app for macOS that provides quick translations of short snippets of text into a desired language.
+
+![Screenshot from KwikTrans](https://github.com/cheerlessDreamer/kwiktrans/blob/bac0df42cfa677c5c60a8fcf24d67a0e310efb9b/kwiktransScreenshot.png)
 
 *I'm a Brit living in Sweden and although I'm comfortable reading Swedish, occasionally a new word or phrase crops up that I can't understand. **Enter KwikTrans!***
 
