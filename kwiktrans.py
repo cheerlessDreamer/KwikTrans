@@ -12,19 +12,6 @@ translator = Translator()
 
 # rumps.debug_mode(True)
 
-
-# TODO: • Preferences panel to change default language configuration (could use PyQt5)
-#       • Before a GUI version is implemented, use a 'preferences.json' file to maintain preferences
-#       • Add keybindings
-#       • Add a right-click service
-#       • Use full name of language ('Detect Language' and 'Random') instead of ISO code (maybe a flag emoji?)
-#       • Inform when 'Copy Text' was successful (either change icon to 'Copied!' or use a native notification)
-#       • Fix dark mode - still not working for windows and alerts
-#       • Remove 'Random' mode?
-#       • Implement auto-translate by language (if clipboard is English, translate to Swedish - and vice versa)
-#       • Update version number in 'About' window automatically (use a Global Variable?)
-
-
 def getOnlineStatus():
     """Return online status as a boolean"""
     try:
