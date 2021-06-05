@@ -90,7 +90,8 @@ class Kwiktrans(rumps.App):
             return None
 
         detectedLanguage = translator.detect(original)
-        rumps.alert(title="Detected language:", message=detectedLanguage.lang)
+        fullLanguage = availableLanguages[detectedLanguage.lang]
+        rumps.alert(title="Detected language:", message=fullLanguage.title())
 
     @rumps.clicked("🇬🇧 → 🇸🇪")
     def englishToSwedish(self, _):
@@ -147,12 +148,13 @@ class Kwiktrans(rumps.App):
         else:
             detectedLang = translator.detect(original)
             detectedLang = detectedLang.lang
-            translation = translator.translate(original, dest=random.choice(availableLanguages))
+            translation = translator.translate(original, dest=random.choice(list(availableLanguages.keys())))
             while detectedLang == translation.dest:
-                translation = translator.translate(original, dest=random.choice(availableLanguages))
+                translation = translator.translate(original, dest=random.choice(list(availableLanguages.keys())))
 
             correctAnswer = translation.dest
-            choices = random.sample(availableLanguages, 2)
+            correctLanguage = availableLanguages[correctAnswer]
+            choices = random.sample(list(availableLanguages.keys()), 2)
             choices.append(correctAnswer)
             random.shuffle(choices)
             choice1 = choices[0]
@@ -171,7 +173,7 @@ class Kwiktrans(rumps.App):
             response = quiz.run()
 
             if response.clicked == correctResponse:
-                correct = rumps.alert(title="Correct!", cancel="Play again", ok="Great!!",
+                correct = rumps.alert(title="Correct!", cancel="Play again", ok="Great!",
                                       message="Well done!")
                 # print("Well done!")
                 if correct:
@@ -182,7 +184,7 @@ class Kwiktrans(rumps.App):
 
             else:
                 wrong = rumps.alert(title="Bad luck", cancel="Play again", ok="Close",
-                                    message=f"Correct answer = {translation.dest}")
+                                    message=f"Correct answer:\n\n{correctLanguage.title()}")
                 # print("User gave up")
                 if wrong:
                     return None
