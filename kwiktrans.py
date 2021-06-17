@@ -67,7 +67,7 @@ class Kwiktrans(rumps.App):
     def aboutWindow(self, _):
         """Show a simple 'about' window."""
         rumps.alert(title="KwikTrans", ok="Close",
-                    message="© 2021 Danny Taylor\nVersion: 0.4.1\nContact: hello@dannytaylor.se")
+                    message="© 2021 Danny Taylor\nVersion: 0.5.0\nContact: hello@dannytaylor.se")
 
     @rumps.clicked("Detect Language")
     def getLanguage(self, _):
@@ -106,7 +106,6 @@ class Kwiktrans(rumps.App):
         response = result.run()
         if not response.clicked:
             pyperclip.copy(translation.text)
-            # print("User clicked 'Copy'")
 
     @rumps.clicked("🇸🇪 → 🇬🇧")
     def swedishToEnglish(self, _):
@@ -121,10 +120,8 @@ class Kwiktrans(rumps.App):
         response = result.run()
         if response.clicked:
             pass
-            # print("User clicked 'OK'")
         else:
             pyperclip.copy(translation.text)
-            # print("User clicked 'Copy'")
 
     @rumps.clicked("Random")
     def toRandom(self, _):
@@ -154,28 +151,24 @@ class Kwiktrans(rumps.App):
 
             correctAnswer = translation.dest
             correctLanguage = availableLanguages[correctAnswer]
-            choices = random.sample(list(availableLanguages.keys()), 2)
-            choices.append(correctAnswer)
+            choices = random.sample(list(availableLanguages.values()), 2)
+            choices.append(correctLanguage)
             random.shuffle(choices)
             choice1 = choices[0]
             choice2 = choices[1]
             choice3 = choices[2]
-
-            correctChoice = choices.index(correctAnswer) + 1
-            # print("Correct choice:", correctChoice)
+            correctChoice = choices.index(correctLanguage) + 1
             correctResponse = correctChoice + 1
-            # print("Correct response value:", correctResponse)
 
             quiz = rumps.Window(title="What language is this:", cancel=None, ok="Admit Defeat",
                                 default_text=translation.text, dimensions=(320, 320))
-            quiz.add_buttons(choice1, choice2, choice3)
+            quiz.add_buttons(choice1.title(), choice2.title(), choice3.title())
 
             response = quiz.run()
 
             if response.clicked == correctResponse:
-                correct = rumps.alert(title="Correct!", cancel="Play again", ok="Great!",
+                correct = rumps.alert(title="Correct!", cancel="Play again", ok="Close",
                                       message="Well done!")
-                # print("Well done!")
                 if correct:
                     return None
                 else:
@@ -185,7 +178,6 @@ class Kwiktrans(rumps.App):
             else:
                 wrong = rumps.alert(title="Bad luck", cancel="Play again", ok="Close",
                                     message=f"Correct answer:\n\n{correctLanguage.title()}")
-                # print("User gave up")
                 if wrong:
                     return None
                 else:

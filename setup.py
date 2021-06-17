@@ -8,7 +8,7 @@ OPTIONS = {
     'argv_emulation': True,
     'iconfile': 'icon.icns',
     'plist': {
-        'CFBundleShortVersionString': '0.4.1',
+        'CFBundleShortVersionString': '0.5.0',
         'LSUIElement': True,
     },
     'packages': ['rumps'],
@@ -21,5 +21,6 @@ setup(
     author_email='danny@dannytaylor.se',
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
-    setup_requires=['py2app'], install_requires=['rumps']
+    setup_requires=['py2app'],
+    install_requires=['rumps']
 )
