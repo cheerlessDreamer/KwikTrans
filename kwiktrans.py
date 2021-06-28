@@ -58,8 +58,7 @@ class Kwiktrans(rumps.App):
         super(Kwiktrans, self).__init__(name="TestName")
         self.template = True
         self.icon = "icon.png"
-        self.menu = ["About KwikTrans", "Preferences – Coming soon!", None, "Detect Language", "Random", "🇬🇧 → 🇸🇪",
-                     "🇸🇪 → 🇬🇧", None]
+        self.menu = ["About KwikTrans", "Preferences", None, "KwikTrans", "Detect Language", "Random", None]
         # self.nativeLanguage = pass
         # self.foreignLanguage = pass
 
@@ -67,7 +66,7 @@ class Kwiktrans(rumps.App):
     def aboutWindow(self, _):
         """Show a simple 'about' window."""
         rumps.alert(title="KwikTrans", ok="Close",
-                    message="© 2021 Danny Taylor\nVersion: 0.5.0\nContact: hello@dannytaylor.se")
+                    message="© 2021 Danny Taylor\nVersion: 0.6.0\nContact: hello@dannytaylor.se")
 
     @rumps.clicked("Detect Language")
     def getLanguage(self, _):
@@ -93,39 +92,39 @@ class Kwiktrans(rumps.App):
         fullLanguage = availableLanguages[detectedLanguage.lang]
         rumps.alert(title="Detected language:", message=fullLanguage.title())
 
-    @rumps.clicked("🇬🇧 → 🇸🇪")
-    def englishToSwedish(self, _):
-        """Translates text on the clipboard from English into Swedish."""
-        original = getClipboard(source="en", destination="sv")
+    @rumps.clicked("KwikTrans")
+    def autoTranslate(self, _):
+        """Automatically translate text between English and Swedish, based on source text language."""
+        original = getClipboard()
         if not original:
             return
-
         translation = translator.translate(original, src="en", dest="sv")
-        result = rumps.Window(title="English to Swedish…", cancel="Copy", default_text=translation.text,
-                              dimensions=(320, 320))
-        response = result.run()
-        if not response.clicked:
-            pyperclip.copy(translation.text)
-
-    @rumps.clicked("🇸🇪 → 🇬🇧")
-    def swedishToEnglish(self, _):
-        """Translates text on the clipboard from Swedish into English."""
-        original = getClipboard(source="sv", destination="en")
-        if not original:
-            return
-
-        translation = translator.translate(original, src="sv", dest="en")
-        result = rumps.Window(title="Swedish to English…", cancel="Copy", default_text=translation.text,
-                              dimensions=(320, 320))
-        response = result.run()
-        if response.clicked:
-            pass
+        detectedLang = translator.detect(original)
+        detectedLang = detectedLang.lang
+        if detectedLang == "en":
+            result = rumps.Window(title="English to Swedish…", cancel="Copy", default_text=translation.text,
+                                  dimensions=(320, 320))
+            response = result.run()
+            if not response.clicked:
+                pyperclip.copy(translation.text)
+        elif detectedLang == "sv":
+            translation = translator.translate(original, src="sv", dest="en")
+            result = rumps.Window(title="Swedish to English…", cancel="Copy", default_text=translation.text,
+                                  dimensions=(320, 320))
+            response = result.run()
+            if not response.clicked:
+                pyperclip.copy(translation.text)
         else:
-            pyperclip.copy(translation.text)
+            translation = translator.translate(original, dest="en")
+            result = rumps.Window(title="To English…", cancel="Copy", default_text=translation.text,
+                                  dimensions=(320, 320))
+            response = result.run()
+            if not response.clicked:
+                pyperclip.copy(translation.text)
 
     @rumps.clicked("Random")
     def toRandom(self, _):
-        """Starts a super fun quiz session and presents three possible language choices."""
+        """Starts a *super fun* quiz session and presents three possible language choices."""
         if not getOnlineStatus():
             rumps.alert(title="No Connection…", ok="Close",
                         message="We are having trouble connecting to the internet. Please try again later.")
