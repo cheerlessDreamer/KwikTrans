@@ -58,7 +58,16 @@ class Kwiktrans(rumps.App):
         super(Kwiktrans, self).__init__(name="TestName")
         self.template = True
         self.icon = "icon.png"
-        self.menu = ["About KwikTrans", "Preferences", None, "KwikTrans", "Detect Language", "Random", None]
+        self.menu = [
+            rumps.MenuItem("About KwikTrans"),
+            None,
+            rumps.MenuItem('Translate', icon='icon.icns', template=True, dimensions=(18, 18), key="T"),
+            None,
+            rumps.MenuItem("Detect Language", key="D"),
+            rumps.MenuItem("Random", key="R"),
+            None,
+            rumps.MenuItem("Preferences", callback=None)
+        ]
         # self.nativeLanguage = pass
         # self.foreignLanguage = pass
 
@@ -92,7 +101,7 @@ class Kwiktrans(rumps.App):
         fullLanguage = availableLanguages[detectedLanguage.lang]
         rumps.alert(title="Detected language:", message=fullLanguage.title())
 
-    @rumps.clicked("KwikTrans")
+    @rumps.clicked("Translate")
     def autoTranslate(self, _):
         """Automatically translate text between English and Swedish, based on source text language."""
         original = getClipboard()
