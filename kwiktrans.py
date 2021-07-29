@@ -57,7 +57,7 @@ class Kwiktrans(rumps.App):
     def __init__(self):
         super(Kwiktrans, self).__init__(name="TestName")
         self.template = True
-        self.icon = "icon.png"
+        self.icon = "icon.icns"
         self.menu = [
             rumps.MenuItem("About KwikTrans"),
             None,
@@ -75,7 +75,7 @@ class Kwiktrans(rumps.App):
     def aboutWindow(self, _):
         """Show a simple 'about' window."""
         rumps.alert(title="KwikTrans", ok="Close",
-                    message="© 2021 Danny Taylor\nVersion: 0.6.0\nContact: hello@dannytaylor.se")
+                    message="© 2021 Danny Taylor\nVersion: 0.6.1\nContact: hello@dannytaylor.se")
 
     @rumps.clicked("Detect Language")
     def getLanguage(self, _):

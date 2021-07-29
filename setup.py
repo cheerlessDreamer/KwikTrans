@@ -3,12 +3,12 @@ from setuptools import setup
 # To build a new application, run: python setup.py py2app
 
 APP = ['kwiktrans.py']
-DATA_FILES = [('', ['icon.png'])]
+DATA_FILES = [('', ['icon.png']), ('', ['icon.icns'])]
 OPTIONS = {
     'argv_emulation': True,
-    'iconfile': 'icon.icns',
+    'iconfile': 'icon.png',
     'plist': {
-        'CFBundleShortVersionString': '0.6.0',
+        'CFBundleShortVersionString': '0.6.1',
         'LSUIElement': True,
     },
     'packages': ['rumps'],
