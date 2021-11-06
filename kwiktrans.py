@@ -12,6 +12,9 @@ translator = Translator()
 
 # rumps.debug_mode(True)
 
+limitExceeded = False
+
+
 def getOnlineStatus():
     """Return online status as a boolean"""
     try:
@@ -22,26 +25,19 @@ def getOnlineStatus():
     return False
 
 
-def getClipboard(source=None, destination=None):
+def getClipboard():
     """Get clipboard contents and check length"""
+    global limitExceeded
     original = pyperclip.paste()
+    limitExceeded = False
     if not getOnlineStatus():
         rumps.alert(title="No Connection…", ok="Close",
-                    message="We are having trouble connecting to the internet. Please try again later.")
+                    message="Please check that you are connected to the internet and try again.")
         return None
 
     if len(original) > 500:
+        limitExceeded = True
         original = original[0:500]
-        translation = translator.translate(original, src=source, dest=destination)
-        result = rumps.Window(title="Character limit exceeded…",
-                              message="Maximum length is 500 characters. Here are the first 500 characters, "
-                                      "translated…",
-                              cancel="Copy", default_text=translation.text, dimensions=(320, 320))
-        response = result.run()
-        if not response.clicked:
-            pyperclip.copy(translation.text)
-            print("User clicked 'Copy'")
-        return None
 
     if len(original) == 0:
         rumps.alert(title="Empty clipboard!",
@@ -59,14 +55,14 @@ class Kwiktrans(rumps.App):
         self.template = True
         self.icon = "icon.icns"
         self.menu = [
-            rumps.MenuItem("About KwikTrans"),
+            rumps.MenuItem(title="About KwikTrans"),
             None,
-            rumps.MenuItem('Translate', icon='icon.icns', template=True, dimensions=(18, 18), key="T"),
+            rumps.MenuItem(title="Translate", icon='icon.icns', template=True, dimensions=(18, 18), key="T"),
             None,
-            rumps.MenuItem("Detect Language", key="D"),
-            rumps.MenuItem("Random", key="R"),
+            rumps.MenuItem(title="Detect Language", key="D"),
+            rumps.MenuItem(title="Random", key="R"),
             None,
-            rumps.MenuItem("Preferences", callback=None)
+            rumps.MenuItem(title="Preferences", callback=None)
         ]
         # self.nativeLanguage = pass
         # self.foreignLanguage = pass
@@ -75,7 +71,7 @@ class Kwiktrans(rumps.App):
     def aboutWindow(self, _):
         """Show a simple 'about' window."""
         rumps.alert(title="KwikTrans", ok="Close",
-                    message="© 2021 Danny Taylor\nVersion: 0.6.1\nContact: hello@dannytaylor.se")
+                    message="© 2021 Danny Taylor\nVersion: 0.6.2\nContact: hello@dannytaylor.se")
 
     @rumps.clicked("Detect Language")
     def getLanguage(self, _):
@@ -105,28 +101,36 @@ class Kwiktrans(rumps.App):
     def autoTranslate(self, _):
         """Automatically translate text between English and Swedish, based on source text language."""
         original = getClipboard()
+
         if not original:
             return
+
+        if limitExceeded:
+            windowMessage = "Character limit exceeded – only the first 500 characters are shown below:"
+        else:
+            windowMessage = ""
+
         translation = translator.translate(original, src="en", dest="sv")
         detectedLang = translator.detect(original)
         detectedLang = detectedLang.lang
         if detectedLang == "en":
             result = rumps.Window(title="English to Swedish…", cancel="Copy", default_text=translation.text,
-                                  dimensions=(320, 320))
+                                  dimensions=(320, 320), message=windowMessage)
             response = result.run()
             if not response.clicked:
                 pyperclip.copy(translation.text)
         elif detectedLang == "sv":
+            windowTitle = "Swedish to English…"
             translation = translator.translate(original, src="sv", dest="en")
-            result = rumps.Window(title="Swedish to English…", cancel="Copy", default_text=translation.text,
-                                  dimensions=(320, 320))
+            result = rumps.Window(title=windowTitle, cancel="Copy", default_text=translation.text,
+                                  dimensions=(320, 320), message=windowMessage)
             response = result.run()
             if not response.clicked:
                 pyperclip.copy(translation.text)
         else:
             translation = translator.translate(original, dest="en")
             result = rumps.Window(title="To English…", cancel="Copy", default_text=translation.text,
-                                  dimensions=(320, 320))
+                                  dimensions=(320, 320), message=windowMessage)
             response = result.run()
             if not response.clicked:
                 pyperclip.copy(translation.text)
