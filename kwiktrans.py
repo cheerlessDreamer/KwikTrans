@@ -25,6 +25,7 @@ def getOnlineStatus():
         pass
     return False
 
+
 def getClipboard():
     """Get clipboard contents and check length"""
     global limitExceeded
