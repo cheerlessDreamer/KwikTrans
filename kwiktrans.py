@@ -18,12 +18,12 @@ limitExceeded = False
 def getOnlineStatus():
     """Return online status as a boolean"""
     try:
+        socket.setdefaulttimeout(5)
         socket.create_connection(("1.1.1.1", 53))
         return True
     except OSError:
         pass
     return False
-
 
 def getClipboard():
     """Get clipboard contents and check length"""
@@ -31,7 +31,7 @@ def getClipboard():
     original = pyperclip.paste()
     limitExceeded = False
     if not getOnlineStatus():
-        rumps.alert(title="No Connection…", ok="Close",
+        rumps.alert(title="Connection Error", ok="Close",
                     message="Please check that you are connected to the internet and try again.")
         return None
 
