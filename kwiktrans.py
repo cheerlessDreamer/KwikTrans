@@ -80,7 +80,7 @@ class Kwiktrans(rumps.App):
     def aboutWindow(self, _):
         """Show a simple 'about' window."""
         rumps.alert(title="KwikTrans", ok="Close",
-                    message="© 2021 Danny Taylor\nVersion: 1.0.0\nContact: hello@dannytaylor.se")
+                    message="© 2021 Danny Taylor\nVersion: 1.0.1\nContact: hello@dannytaylor.se")
 
     @rumps.clicked("Detect Language")
     def getLanguage(self, _):
