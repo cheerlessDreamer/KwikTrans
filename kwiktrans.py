@@ -71,7 +71,7 @@ class Kwiktrans(rumps.App):
             rumps.MenuItem(title="Detect Language", key="D"),
             rumps.MenuItem(title="Random", key="R"),
             None,
-            rumps.MenuItem(title="Preferences", callback=None)
+            # rumps.MenuItem(title="Preferences", callback=None)
         ]
         global nativeLanguage
         global defaultForeignLanguage
