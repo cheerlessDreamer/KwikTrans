@@ -1,6 +1,6 @@
 import random
 import socket
-
+import json
 import pyperclip
 import rumps
 from googletrans import Translator
@@ -13,6 +13,14 @@ translator = Translator()
 # rumps.debug_mode(True)
 
 limitExceeded = False
+
+with open('preferences.json', 'r') as preferencesFile:
+    preferencesData = preferencesFile.read()
+preferences = json.loads(preferencesData)
+nativeLanguage = preferences['native_language']
+defaultForeignLanguage = preferences['default_foreign_language']
+nativeLanguageName = availableLanguages[nativeLanguage].title()
+defaultForeignLanguageName = availableLanguages[defaultForeignLanguage].title()
 
 
 def getOnlineStatus():
@@ -65,8 +73,8 @@ class Kwiktrans(rumps.App):
             None,
             rumps.MenuItem(title="Preferences", callback=None)
         ]
-        # self.nativeLanguage = pass
-        # self.foreignLanguage = pass
+        global nativeLanguage
+        global defaultForeignLanguage
 
     @rumps.clicked("About KwikTrans")
     def aboutWindow(self, _):
@@ -100,7 +108,8 @@ class Kwiktrans(rumps.App):
 
     @rumps.clicked("Translate")
     def autoTranslate(self, _):
-        """Automatically translate text between English and Swedish, based on source text language."""
+        """Automatically translate text between native language and a default foreign language, based on source text
+        language. """
         original = getClipboard()
 
         if not original:
@@ -111,26 +120,28 @@ class Kwiktrans(rumps.App):
         else:
             windowMessage = ""
 
-        translation = translator.translate(original, src="en", dest="sv")
+        translation = translator.translate(original, src=nativeLanguage, dest=defaultForeignLanguage)
         detectedLang = translator.detect(original)
         detectedLang = detectedLang.lang
-        if detectedLang == "en":
-            result = rumps.Window(title="English to Swedish…", cancel="Copy", default_text=translation.text,
+        if detectedLang == nativeLanguage:
+            windowTitle = str(nativeLanguageName + ' to ' + defaultForeignLanguageName)
+            result = rumps.Window(title=windowTitle, cancel="Copy", default_text=translation.text,
                                   dimensions=(320, 320), message=windowMessage)
             response = result.run()
             if not response.clicked:
                 pyperclip.copy(translation.text)
-        elif detectedLang == "sv":
-            windowTitle = "Swedish to English…"
-            translation = translator.translate(original, src="sv", dest="en")
+        elif detectedLang == defaultForeignLanguage:
+            windowTitle = str(defaultForeignLanguageName + ' to ' + nativeLanguageName)
+            translation = translator.translate(original, src=defaultForeignLanguage, dest=nativeLanguage)
             result = rumps.Window(title=windowTitle, cancel="Copy", default_text=translation.text,
                                   dimensions=(320, 320), message=windowMessage)
             response = result.run()
             if not response.clicked:
                 pyperclip.copy(translation.text)
         else:
-            translation = translator.translate(original, dest="en")
-            result = rumps.Window(title="To English…", cancel="Copy", default_text=translation.text,
+            translation = translator.translate(original, dest=nativeLanguage)
+            windowTitle = str('To ' + nativeLanguageName)
+            result = rumps.Window(title=windowTitle, cancel="Copy", default_text=translation.text,
                                   dimensions=(320, 320), message=windowMessage)
             response = result.run()
             if not response.clicked:

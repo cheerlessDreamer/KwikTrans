@@ -1,9 +1,9 @@
 from setuptools import setup
 
-# To build a new application, run: python setup.py py2app
+# To build a new application, run: python3 setup.py py2app
 
 APP = ['kwiktrans.py']
-DATA_FILES = [('', ['icon.png']), ('', ['icon.icns'])]
+DATA_FILES = [('', ['icon.png']), ('', ['icon.icns']), ('', ['preferences.json'])]
 OPTIONS = {
     'argv_emulation': True,
     'iconfile': 'icon.png',

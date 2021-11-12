@@ -1,5 +1,8 @@
 import unittest
+import json
+import kwiktrans
 from kwiktrans import *
+from variables import availableLanguages
 
 
 class ClipboardTests(unittest.TestCase):
@@ -37,9 +40,32 @@ class ClipboardTests(unittest.TestCase):
         self.assertIsNone(getClipboard())
 
     def test_getClipboard(self):
+        """
+        Test that the getClipboard function works as expected by copying some provided dummy text
+        """
         text = "Lorem Ipsum"
         pyperclip.copy(text)
         self.assertEqual(getClipboard(), text)
+
+
+class SetLanguagePreferenceTests(unittest.TestCase):
+    def test_readCurrentDefaultForeignLanguage(self):
+        """
+        Test that Kwiktrans identifies the foreign language found in preferences.json
+        """
+        self.assertEqual(defaultForeignLanguage, preferences['default_foreign_language'])
+        print()
+        print("Detected foreign language code: " + defaultForeignLanguage)
+        print("Foreign language name: " + availableLanguages[defaultForeignLanguage].title())
+
+    def test_readCurrentNativeLanguage(self):
+        """
+        Test that Kwiktrans identifies the native language found in preferences.json
+        """
+        self.assertEqual(nativeLanguage, preferences['native_language'])
+        print()
+        print("Detected native language code: " + nativeLanguage)
+        print("Native language name: " + availableLanguages[nativeLanguage].title())
 
 
 if __name__ == '__main__':
